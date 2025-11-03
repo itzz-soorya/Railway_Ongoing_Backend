@@ -15,10 +15,9 @@ namespace RAILWAY_BACKEND.Controllers
             _configuration = configuration;
         }
 
-        #region Create Bookings (multiple)
+        #region Create Bookings (Single Online Booking)
 
         [HttpPost("online-book")]
-        [HttpPost]
         public IActionResult CreateOnlineBooking([FromBody] NewBookingRequest booking)
         {
             if (booking == null)
@@ -30,7 +29,7 @@ namespace RAILWAY_BACKEND.Controllers
             connection.Open();
 
             // Step 1: Get admin_id for the worker
-            int adminId;
+            string adminId;
             using (var getAdminCmd = new NpgsqlCommand(
                 "SELECT admin_id FROM worker_accounts WHERE worker_id = @workerId", connection))
             {
@@ -40,30 +39,26 @@ namespace RAILWAY_BACKEND.Controllers
                 if (result == null)
                     return BadRequest(new { message = $"Invalid worker_id {booking.WorkerId}. No admin found." });
 
-                adminId = Convert.ToInt32(result);
+                adminId = result.ToString()!;
             }
 
-            Console.WriteLine(booking.BalanceAmount);
-
-            // Step 2: Prepare insert query
+            // Step 2: Prepare insert query (includes booking_id)
             string insertQuery = @"
                 INSERT INTO bookings 
-                (admin_id, worker_id, guest_name, phone_number, number_of_persons, 
-                booking_type, total_hours, booking_date, in_time, out_time, 
-                proof_type, proof_id, price_per_person, total_amount, paid_amount, 
-                balance_amount, payment_method, status)
+                (booking_id, admin_id, worker_id, guest_name, phone_number, number_of_persons, 
+                 booking_type, total_hours, booking_date, in_time, out_time, 
+                 proof_type, proof_id, price_per_person, total_amount, paid_amount, 
+                 balance_amount, payment_method, status)
                 VALUES 
-                (@admin_id, @worker_id, @guest_name, @phone_number, @number_of_persons, 
-                @booking_type, @total_hours, @booking_date, @in_time, 
-                CASE WHEN @status = 'Completed' THEN CURRENT_TIME ELSE NULL END, 
-                @proof_type, @proof_id, @price_per_person, @total_amount, @paid_amount, 
-                @balance_amount, @payment_method, @status)
-                RETURNING booking_id;";
+                (@booking_id, @admin_id, @worker_id, @guest_name, @phone_number, @number_of_persons, 
+                 @booking_type, @total_hours, @booking_date, @in_time, @out_time, 
+                 @proof_type, @proof_id, @price_per_person, @total_amount, @paid_amount, 
+                 @balance_amount, @payment_method, @status);";
 
             string status = string.IsNullOrEmpty(booking.Status) ? "Active" : booking.Status;
 
-            // Step 3: Execute insert command
             using var cmd = new NpgsqlCommand(insertQuery, connection);
+            cmd.Parameters.AddWithValue("@booking_id", booking.BookingId);
             cmd.Parameters.AddWithValue("@admin_id", adminId);
             cmd.Parameters.AddWithValue("@worker_id", booking.WorkerId);
             cmd.Parameters.AddWithValue("@guest_name", booking.GuestName);
@@ -73,6 +68,7 @@ namespace RAILWAY_BACKEND.Controllers
             cmd.Parameters.AddWithValue("@total_hours", booking.TotalHours);
             cmd.Parameters.AddWithValue("@booking_date", booking.BookingDate);
             cmd.Parameters.AddWithValue("@in_time", booking.InTime);
+            cmd.Parameters.AddWithValue("@out_time", booking.OutTime ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@proof_type", booking.ProofType);
             cmd.Parameters.AddWithValue("@proof_id", booking.ProofId);
             cmd.Parameters.AddWithValue("@price_per_person", booking.PricePerPerson);
@@ -82,11 +78,18 @@ namespace RAILWAY_BACKEND.Controllers
             cmd.Parameters.AddWithValue("@payment_method", booking.PaymentMethod);
             cmd.Parameters.AddWithValue("@status", status);
 
-            var newBookingId = cmd.ExecuteScalar();
+            cmd.ExecuteNonQuery();
 
-            return Ok();
+            return Ok(new
+            {
+                message = "Booking created successfully",
+                booking_id = booking.BookingId
+            });
         }
 
+        #endregion
+
+        #region Create Multiple Bookings
 
         [HttpPost("create")]
         public IActionResult CreateBookings([FromBody] List<NewBookingRequest> bookings)
@@ -99,13 +102,11 @@ namespace RAILWAY_BACKEND.Controllers
             using var connection = new NpgsqlConnection(connectionString);
             connection.Open();
 
-            Console.WriteLine(bookings.ToArray());
             var createdBookings = new List<object>();
 
             foreach (var request in bookings)
             {
-                Console.WriteLine($"Processing booking for Worker ID: {request.WorkerId}");
-
+            // Step 1: Find admin_id for the given worker
                 int adminId;
                 using (var getAdminCmd = new NpgsqlCommand(
                     "SELECT admin_id FROM worker_accounts WHERE worker_id = @workerId", connection))
@@ -113,31 +114,28 @@ namespace RAILWAY_BACKEND.Controllers
                     getAdminCmd.Parameters.AddWithValue("@workerId", request.WorkerId);
                     var result = getAdminCmd.ExecuteScalar();
                     if (result == null)
-                    {
                         return BadRequest(new { message = $"Invalid worker_id {request.WorkerId}. No admin found." });
-                    }
+
                     adminId = Convert.ToInt32(result);
                 }
 
-                // Insert booking
+                // Step 2: Insert with booking_id (manually)
                 string insertQuery = @"
-    INSERT INTO bookings 
-    (admin_id, worker_id, guest_name, phone_number, number_of_persons, 
-     booking_type, total_hours, booking_date, in_time, out_time, 
-     proof_type, proof_id, price_per_person, total_amount, paid_amount, 
-     balance_amount, payment_method, status)
-    VALUES 
-    (@admin_id, @worker_id, @guest_name, @phone_number, @number_of_persons, 
-     @booking_type, @total_hours, @booking_date, @in_time, 
-     CASE WHEN @status = 'Completed' THEN CURRENT_TIME ELSE NULL END, 
-     @proof_type, @proof_id, @price_per_person, @total_amount, @paid_amount, 
-     @balance_amount, @payment_method, @status)
-    RETURNING booking_id;
-";
+                    INSERT INTO bookings 
+                    (booking_id, admin_id, worker_id, guest_name, phone_number, number_of_persons, 
+                    booking_type, total_hours, booking_date, in_time, out_time,
+                    proof_type, proof_id, price_per_person, total_amount, paid_amount, 
+                    balance_amount, payment_method, status)
+                    VALUES 
+                    (@booking_id, @admin_id, @worker_id, @guest_name, @phone_number, @number_of_persons, 
+                    @booking_type, @total_hours, @booking_date, @in_time, @out_time,
+                    @proof_type, @proof_id, @price_per_person, @total_amount, @paid_amount, 
+                    @balance_amount, @payment_method, @status);";
 
                 string status = string.IsNullOrEmpty(request.Status) ? "Active" : request.Status;
 
                 using var cmd = new NpgsqlCommand(insertQuery, connection);
+                cmd.Parameters.AddWithValue("@booking_id", request.BookingId);
                 cmd.Parameters.AddWithValue("@admin_id", adminId);
                 cmd.Parameters.AddWithValue("@worker_id", request.WorkerId);
                 cmd.Parameters.AddWithValue("@guest_name", request.GuestName);
@@ -147,6 +145,7 @@ namespace RAILWAY_BACKEND.Controllers
                 cmd.Parameters.AddWithValue("@total_hours", request.TotalHours);
                 cmd.Parameters.AddWithValue("@booking_date", request.BookingDate);
                 cmd.Parameters.AddWithValue("@in_time", request.InTime);
+                cmd.Parameters.AddWithValue("@out_time", request.OutTime ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@proof_type", request.ProofType);
                 cmd.Parameters.AddWithValue("@proof_id", request.ProofId);
                 cmd.Parameters.AddWithValue("@price_per_person", request.PricePerPerson);
@@ -156,23 +155,24 @@ namespace RAILWAY_BACKEND.Controllers
                 cmd.Parameters.AddWithValue("@payment_method", request.PaymentMethod);
                 cmd.Parameters.AddWithValue("@status", status);
 
-                var newBookingId = cmd.ExecuteScalar();
+                cmd.ExecuteNonQuery();
 
                 createdBookings.Add(new
-                {
-                    booking_id = newBookingId,
-                    admin_id = adminId,
-                    worker_id = request.WorkerId,
-                    status = status  // <-- return the actual status
-                });
-            }
-
-            return Ok(new
             {
-                message = "Bookings created successfully",
-                bookings = createdBookings
-            });
-        }
+            booking_id = request.BookingId,
+            admin_id = adminId,
+            worker_id = request.WorkerId,
+            status = status
+        });
+    }
+
+    return Ok(new
+    {
+        message = "Bookings created successfully",
+        bookings = createdBookings
+    });
+}
+
 
         #endregion
 
@@ -185,14 +185,12 @@ namespace RAILWAY_BACKEND.Controllers
             using var connection = new NpgsqlConnection(connectionString);
             connection.Open();
 
-            // Determine out_time: frontend can send or default to CURRENT_TIME
             string updateQuery = @"
                 UPDATE bookings 
                 SET out_time = @out_time,
                     status = @status,
                     updated_at = CURRENT_TIMESTAMP
-                WHERE booking_id = @booking_id;
-            ";
+                WHERE booking_id = @booking_id;";
 
             using var cmd = new NpgsqlCommand(updateQuery, connection);
             TimeSpan outTime = request.OutTime ?? DateTime.Now.TimeOfDay;
@@ -214,6 +212,10 @@ namespace RAILWAY_BACKEND.Controllers
                 status = status
             });
         }
+
+        #endregion
+
+        #region Get Bookings
 
         [HttpGet("{id}")]
         public IActionResult GetBooking(int id)
@@ -279,7 +281,6 @@ namespace RAILWAY_BACKEND.Controllers
             return Ok(activeBookings);
         }
 
-
         #endregion
 
         #region Request Models
@@ -287,61 +288,67 @@ namespace RAILWAY_BACKEND.Controllers
         public class CheckoutRequest
         {
             public int BookingId { get; set; }
-            public TimeSpan? OutTime { get; set; }       // optional, can pass null
-            public string? Status { get; set; }          // optional, can be 'Completed' or custom
+            public TimeSpan? OutTime { get; set; }
+            public string? Status { get; set; }
         }
-public class NewBookingRequest
-    {
-        [JsonPropertyName("worker_id")]
-        public int WorkerId { get; set; }
 
-        [JsonPropertyName("guest_name")]
-        public string GuestName { get; set; } = "";
+        public class NewBookingRequest
+        {
+            [JsonPropertyName("booking_id")]
+            public string BookingId { get; set; } = "";
 
-        [JsonPropertyName("phone_number")]
-        public string PhoneNumber { get; set; } = "";
+            [JsonPropertyName("worker_id")]
+            public string WorkerId { get; set; } = "";
 
-        [JsonPropertyName("number_of_persons")]
-        public int NumberOfPersons { get; set; }
+            [JsonPropertyName("guest_name")]
+            public string GuestName { get; set; } = "";
 
-        [JsonPropertyName("booking_type")]
-        public string BookingType { get; set; } = "";
+            [JsonPropertyName("phone_number")]
+            public string PhoneNumber { get; set; } = "";
 
-        [JsonPropertyName("total_hours")]
-        public int TotalHours { get; set; }
+            [JsonPropertyName("number_of_persons")]
+            public int NumberOfPersons { get; set; }
 
-        [JsonPropertyName("booking_date")]
-        public DateTime BookingDate { get; set; }
+            [JsonPropertyName("booking_type")]
+            public string BookingType { get; set; } = "";
 
-        [JsonPropertyName("in_time")]
-        public TimeSpan InTime { get; set; }
+            [JsonPropertyName("total_hours")]
+            public int TotalHours { get; set; }
 
-        [JsonPropertyName("proof_type")]
-        public string ProofType { get; set; } = "";
+            [JsonPropertyName("booking_date")]
+            public DateTime BookingDate { get; set; }
 
-        [JsonPropertyName("proof_id")]
-        public string ProofId { get; set; } = "";
+            [JsonPropertyName("in_time")]
+            public TimeSpan InTime { get; set; }
 
-        [JsonPropertyName("price_per_person")]
-        public decimal PricePerPerson { get; set; }
+            [JsonPropertyName("out_time")]
+            public TimeSpan? OutTime { get; set; }
 
-        [JsonPropertyName("total_amount")]
-        public decimal TotalAmount { get; set; }
+            [JsonPropertyName("proof_type")]
+            public string ProofType { get; set; } = "";
 
-        [JsonPropertyName("paid_amount")]
-        public decimal PaidAmount { get; set; }
+            [JsonPropertyName("proof_id")]
+            public string ProofId { get; set; } = "";
 
-        [JsonPropertyName("balance_amount")]
-        public decimal BalanceAmount { get; set; }
+            [JsonPropertyName("price_per_person")]
+            public decimal PricePerPerson { get; set; }
 
-        [JsonPropertyName("payment_method")]
-        public string PaymentMethod { get; set; } = "Cash";
+            [JsonPropertyName("total_amount")]
+            public decimal TotalAmount { get; set; }
 
-        [JsonPropertyName("status")]
-        public string? Status { get; set; }
+            [JsonPropertyName("paid_amount")]
+            public decimal PaidAmount { get; set; }
+
+            [JsonPropertyName("balance_amount")]
+            public decimal BalanceAmount { get; set; }
+
+            [JsonPropertyName("payment_method")]
+            public string PaymentMethod { get; set; } = "Cash";
+
+            [JsonPropertyName("status")]
+            public string? Status { get; set; }
+        }
+
+        #endregion
     }
-
-
-    #endregion
-}
 }

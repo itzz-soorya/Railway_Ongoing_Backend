@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\soory\\OneDrive\\Desktop\\RAIL-WAY\\RAILWAY BACKEND\\RAILWAY BACKEND\\RAILWAYBACKEND.csproj": {}
+    "/home/vimalp/Documents/Railway Backend/Railway_Ongoing_Backend/RAILWAYBACKEND.csproj": {}
   },
   "projects": {
-    "C:\\Users\\soory\\OneDrive\\Desktop\\RAIL-WAY\\RAILWAY BACKEND\\RAILWAY BACKEND\\RAILWAYBACKEND.csproj": {
+    "/home/vimalp/Documents/Railway Backend/Railway_Ongoing_Backend/RAILWAYBACKEND.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\soory\\OneDrive\\Desktop\\RAIL-WAY\\RAILWAY BACKEND\\RAILWAY BACKEND\\RAILWAYBACKEND.csproj",
+        "projectUniqueName": "/home/vimalp/Documents/Railway Backend/Railway_Ongoing_Backend/RAILWAYBACKEND.csproj",
         "projectName": "RAILWAYBACKEND",
-        "projectPath": "C:\\Users\\soory\\OneDrive\\Desktop\\RAIL-WAY\\RAILWAY BACKEND\\RAILWAY BACKEND\\RAILWAYBACKEND.csproj",
-        "packagesPath": "C:\\Users\\soory\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\soory\\OneDrive\\Desktop\\RAIL-WAY\\RAILWAY BACKEND\\RAILWAY BACKEND\\obj\\",
+        "projectPath": "/home/vimalp/Documents/Railway Backend/Railway_Ongoing_Backend/RAILWAYBACKEND.csproj",
+        "packagesPath": "/home/vimalp/.nuget/packages/",
+        "outputPath": "/home/vimalp/Documents/Railway Backend/Railway_Ongoing_Backend/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\soory\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/vimalp/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -74,6 +68,16 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.20, 8.0.20]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.linux-x64",
+              "version": "[8.0.20, 8.0.20]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -82,7 +86,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.110/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
