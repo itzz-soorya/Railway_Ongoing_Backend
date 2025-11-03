@@ -23,7 +23,7 @@ namespace RAILWAY_BACKEND.Controllers
             if (booking == null)
                 return BadRequest(new { message = "No booking provided" });
 
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            string connectionString = _configuration.GetConnectionString("DefaultConnection")!;
 
             using var connection = new NpgsqlConnection(connectionString);
             connection.Open();
@@ -93,7 +93,7 @@ namespace RAILWAY_BACKEND.Controllers
             if (bookings == null || bookings.Count == 0)
                 return BadRequest(new { message = "No bookings provided" });
 
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            string connectionString = _configuration.GetConnectionString("DefaultConnection")!;
 
             using var connection = new NpgsqlConnection(connectionString);
             connection.Open();
@@ -177,7 +177,7 @@ namespace RAILWAY_BACKEND.Controllers
         [HttpPut("checkout")]
         public IActionResult Checkout([FromBody] CheckoutRequest request)
         {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            string connectionString = _configuration.GetConnectionString("DefaultConnection")!;
             using var connection = new NpgsqlConnection(connectionString);
             connection.Open();
 
@@ -216,7 +216,7 @@ namespace RAILWAY_BACKEND.Controllers
         [HttpGet("{id}")]
         public IActionResult GetBooking(int id)
         {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            string connectionString = _configuration.GetConnectionString("DefaultConnection")!;
             using var connection = new NpgsqlConnection(connectionString);
             connection.Open();
 
@@ -245,7 +245,7 @@ namespace RAILWAY_BACKEND.Controllers
         [HttpGet("active/{id}")]
         public IActionResult GetActiveBookings(int id)
         {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            string connectionString = _configuration.GetConnectionString("DefaultConnection")!;
             using var connection = new NpgsqlConnection(connectionString);
             connection.Open();
 

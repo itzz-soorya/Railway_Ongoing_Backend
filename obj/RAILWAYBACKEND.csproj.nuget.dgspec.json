@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Final Railway\\RAILWAYBACKEND.csproj": {}
+    "/media/kishore/LDisk1/projects/p/Railway_Ongoing_Backend/RAILWAYBACKEND.csproj": {}
   },
   "projects": {
-    "E:\\Final Railway\\RAILWAYBACKEND.csproj": {
+    "/media/kishore/LDisk1/projects/p/Railway_Ongoing_Backend/RAILWAYBACKEND.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Final Railway\\RAILWAYBACKEND.csproj",
+        "projectUniqueName": "/media/kishore/LDisk1/projects/p/Railway_Ongoing_Backend/RAILWAYBACKEND.csproj",
         "projectName": "RAILWAYBACKEND",
-        "projectPath": "E:\\Final Railway\\RAILWAYBACKEND.csproj",
-        "packagesPath": "C:\\Users\\soory\\.nuget\\packages\\",
-        "outputPath": "E:\\Final Railway\\obj\\",
+        "projectPath": "/media/kishore/LDisk1/projects/p/Railway_Ongoing_Backend/RAILWAYBACKEND.csproj",
+        "packagesPath": "/home/kishore/.nuget/packages/",
+        "outputPath": "/media/kishore/LDisk1/projects/p/Railway_Ongoing_Backend/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\soory\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/kishore/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -38,13 +32,7 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -82,7 +70,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.121/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
