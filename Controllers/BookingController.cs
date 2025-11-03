@@ -87,10 +87,6 @@ namespace RAILWAY_BACKEND.Controllers
             });
         }
 
-        #endregion
-
-        #region Create Multiple Bookings
-
         [HttpPost("create")]
         public IActionResult CreateBookings([FromBody] List<NewBookingRequest> bookings)
         {
