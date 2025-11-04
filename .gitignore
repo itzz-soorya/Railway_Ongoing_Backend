@@ -1,0 +1,62 @@
+# Visual Studio / .NET generated files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build Folders
+[Bb]in/
+[Oo]bj/
+**/bin/
+**/obj/
+
+# Publish outputs
+publish/
+**/publish/
+artifacts/
+
+# Rider
+.idea/
+
+# VS Code settings folder
+.vscode/
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# JetBrains Rider
+.idea/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+
+# User secrets / local config
+secrets.json
+appsettings.Development.json
+
+# Runtime / debug files
+*.pid
+*.seed
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node (if present)
+node_modules/
+
+# Other
+*.nupkg
+*.snupkg
