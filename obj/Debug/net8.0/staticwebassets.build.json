@@ -1,11 +1,1 @@
-{
-  "Version": 1,
-  "Hash": "377QZ1E5AllkPQy6natT5ElfTrfRHiybKx/p+gHYaMI=",
-  "Source": "RAILWAYBACKEND",
-  "BasePath": "_content/RAILWAYBACKEND",
-  "Mode": "Default",
-  "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
-}
+{"Version":1,"Hash":"u5k6C5aT3/yc+Xyw3lsYcVd24qXhvWZEEhQdmc4BzoI=","Source":"RAILWAYBACKEND","BasePath":"_content/RAILWAYBACKEND","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}

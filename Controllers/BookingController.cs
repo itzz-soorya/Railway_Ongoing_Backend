@@ -103,7 +103,7 @@ namespace RAILWAY_BACKEND.Controllers
             foreach (var request in bookings)
             {
             // Step 1: Find admin_id for the given worker
-                int adminId;
+                string adminId;
                 using (var getAdminCmd = new NpgsqlCommand(
                     "SELECT admin_id FROM worker_accounts WHERE worker_id = @workerId", connection))
                 {
@@ -112,7 +112,7 @@ namespace RAILWAY_BACKEND.Controllers
                     if (result == null)
                         return BadRequest(new { message = $"Invalid worker_id {request.WorkerId}. No admin found." });
 
-                    adminId = Convert.ToInt32(result);
+                    adminId = result.ToString()!;
                 }
 
                 // Step 2: Insert with booking_id (manually)
@@ -283,7 +283,7 @@ namespace RAILWAY_BACKEND.Controllers
 
         public class CheckoutRequest
         {
-            public int BookingId { get; set; }
+            public string BookingId { get; set; }
             public TimeSpan? OutTime { get; set; }
             public string? Status { get; set; }
         }
