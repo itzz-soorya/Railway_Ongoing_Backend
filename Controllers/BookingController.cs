@@ -193,7 +193,7 @@ namespace RAILWAY_BACKEND.Controllers
             using var cmd = new NpgsqlCommand(updateQuery, connection);
 
             
-            TimeSpan outTime = request.out_time ?? DateTime.Now.TimeOfDay;
+            TimeSpan outTime = request.out_time == TimeSpan.Zero ? DateTime.Now.TimeOfDay : request.out_time;
             string status = string.IsNullOrEmpty(request.status) ? "Completed" : request.status;
             string paymentMethod = request.payment_method ?? "cash"; 
 
@@ -294,9 +294,9 @@ namespace RAILWAY_BACKEND.Controllers
 
         public class CheckoutRequest
         {
-            public string booking_id { get; set; }
+            public string booking_id { get; set; } = "";
             public TimeSpan out_time { get; set; }
-            public string status { get; set; }
+            public string status { get; set; } = "";
             public string payment_method { get; set; } = "cash";
         }
 
