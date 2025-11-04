@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RAILWAYBACKEND")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8bea4104e8e77beb70da843a7d7927fb5443fb81")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+32077aa3313d859cd204f5fc19bbbb544fa930e8")]
 [assembly: System.Reflection.AssemblyProductAttribute("RAILWAYBACKEND")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RAILWAYBACKEND")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
