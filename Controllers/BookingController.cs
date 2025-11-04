@@ -198,7 +198,7 @@ namespace RAILWAY_BACKEND.Controllers
             string paymentMethod = request.payment_method ?? "cash"; 
 
             
-            cmd.Parameters.AddWithValue("@out_time", outTime.ToString(@"hh\:mm\:ss"));  
+            cmd.Parameters.AddWithValue("@out_time", outTime);  
             cmd.Parameters.AddWithValue("@status", status);
             cmd.Parameters.AddWithValue("@payment_method", paymentMethod);
             cmd.Parameters.AddWithValue("@booking_id", request.booking_id);
