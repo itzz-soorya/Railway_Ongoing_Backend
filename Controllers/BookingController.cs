@@ -181,21 +181,29 @@ namespace RAILWAY_BACKEND.Controllers
             using var connection = new NpgsqlConnection(connectionString);
             connection.Open();
 
+            
             string updateQuery = @"
-                UPDATE bookings 
-                SET out_time = @out_time,
-                    status = @status,
-                    updated_at = CURRENT_TIMESTAMP
-                WHERE booking_id = @booking_id;";
+            UPDATE bookings 
+            SET out_time = @out_time,
+            status = @status,
+            payment_method = @payment_method,
+            updated_at = CURRENT_TIMESTAMP
+            WHERE booking_id = @booking_id;";
 
             using var cmd = new NpgsqlCommand(updateQuery, connection);
-            TimeSpan outTime = request.OutTime ?? DateTime.Now.TimeOfDay;
-            string status = string.IsNullOrEmpty(request.Status) ? "Completed" : request.Status;
 
-            cmd.Parameters.AddWithValue("@out_time", outTime);
+            
+            TimeSpan outTime = request.out_time ?? DateTime.Now.TimeOfDay;
+            string status = string.IsNullOrEmpty(request.status) ? "Completed" : request.status;
+            string paymentMethod = request.payment_method ?? "cash"; 
+
+            
+            cmd.Parameters.AddWithValue("@out_time", outTime.ToString(@"hh\:mm\:ss"));  
             cmd.Parameters.AddWithValue("@status", status);
-            cmd.Parameters.AddWithValue("@booking_id", request.BookingId);
+            cmd.Parameters.AddWithValue("@payment_method", paymentMethod);
+            cmd.Parameters.AddWithValue("@booking_id", request.booking_id);
 
+           
             int rows = cmd.ExecuteNonQuery();
             if (rows == 0)
                 return NotFound(new { message = "Booking not found" });
@@ -203,11 +211,14 @@ namespace RAILWAY_BACKEND.Controllers
             return Ok(new
             {
                 message = "Checkout completed",
-                booking_id = request.BookingId,
+                booking_id = request.booking_id,
                 out_time = outTime.ToString(),
-                status = status
+                status = status,
+                payment_method = paymentMethod
             });
         }
+
+
 
         #endregion
 
@@ -283,9 +294,10 @@ namespace RAILWAY_BACKEND.Controllers
 
         public class CheckoutRequest
         {
-            public string BookingId { get; set; }
-            public TimeSpan? OutTime { get; set; }
-            public string? Status { get; set; }
+            public string booking_id { get; set; }
+            public TimeSpan out_time { get; set; }
+            public string status { get; set; }
+            public string payment_method { get; set; } = "cash";
         }
 
         public class NewBookingRequest
