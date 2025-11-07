@@ -1,0 +1,1 @@
+dotnet build Railway_Ongoing_Backend.sln --configuration Release
