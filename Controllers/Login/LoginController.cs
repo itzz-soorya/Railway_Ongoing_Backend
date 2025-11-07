@@ -29,7 +29,7 @@ namespace RAILWAY_BACKEND.Controllers.Login
             await connection.OpenAsync();
 
 
-            string sql = @"SELECT worker_id, full_name, password_hash 
+            string sql = @"SELECT worker_id, admin_id, full_name, password_hash 
                            FROM worker_accounts 
                            WHERE user_name=@username 
                            LIMIT 1";
@@ -42,6 +42,7 @@ namespace RAILWAY_BACKEND.Controllers.Login
             if (await reader.ReadAsync())
             {
                 string workerId = reader["worker_id"].ToString() ?? "";
+                string adminId = reader["admin_id"].ToString() ?? "";
                 string fullName = reader["full_name"].ToString() ?? "";
                 string storedHash = reader["password_hash"].ToString() ?? "";
 
@@ -57,6 +58,7 @@ namespace RAILWAY_BACKEND.Controllers.Login
                 {
                     message = "Login successful",
                     worker_id = workerId,
+                    admin_id = adminId,
                     name = fullName
                 });
             }
