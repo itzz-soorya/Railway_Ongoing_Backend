@@ -11,6 +11,8 @@
 **/bin/
 **/obj/
 
+*/bin/
+*/obj/
 # Publish outputs
 publish/
 **/publish/
