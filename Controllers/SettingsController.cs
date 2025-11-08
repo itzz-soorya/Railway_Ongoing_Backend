@@ -28,7 +28,8 @@ namespace RAILWAY_BACKEND.Controllers
                 string query = @"
                     SELECT type1, type1_amount, type2, type2_amount, 
                            type3, type3_amount, type4, type4_amount,
-                           advance_payment_enabled, default_advance_percentage
+                           advance_payment_enabled, default_advance_percentage,
+                           hall_name
                     FROM settings
                     WHERE admin_id = @adminId";
 
@@ -84,7 +85,8 @@ namespace RAILWAY_BACKEND.Controllers
                     return Ok(new { 
                         types,
                         advance_payment_enabled = reader.IsDBNull(8) ? (bool?)null : (reader.GetInt32(8) == 1),
-                        default_advance_percentage = reader.IsDBNull(9) ? (decimal?)null : reader.GetDecimal(9)
+                        default_advance_percentage = reader.IsDBNull(9) ? (decimal?)null : reader.GetDecimal(9),
+                        hall_name = reader.GetString(10)
                     });
                 }
 
